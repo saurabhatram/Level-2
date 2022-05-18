@@ -1,0 +1,36 @@
+class Tree
+{
+
+    static class Pair{
+        Node node;
+        int diag;
+
+        
+    }
+
+    diagonal(Node root)
+    {
+        Queue<Pair> queue = new LinkedList<>();
+        queue.add(new Pair(root,0));
+
+        HashMap<Intefer, ArrayList<Pair> map= new HashMap<>();
+        int maxDiag=0;
+        while(queue.size()!=0)
+        {
+            Pair temp= queue.remove();
+
+            if(temp.diag>maxDiag){
+                maxDiag=temp.diag;
+            }
+
+            if(map.containsKey(temp.diag)==false)
+            {
+                map.put(temp.diag,new ArrayList<>());
+                map.get(temp.diag).add(temp);
+            }
+            else{
+                
+            }
+        }
+   }
+}

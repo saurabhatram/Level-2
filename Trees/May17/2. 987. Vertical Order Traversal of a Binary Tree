@@ -1,0 +1,116 @@
+//https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+class Solution {
+    
+    static class Pair implements Comparable<Pair>
+    {
+        TreeNode node;
+        int h;
+        int v;
+        
+        Pair(TreeNode node, int h,int v)
+        {
+            this.node= node;
+            this.h=h;
+            this.v=v;
+        }
+
+      public int  compareTo(Pair other)
+        {
+            if(this.h==other.h)
+            {
+                return this.node.val-other.node.val;
+            }                
+
+            return this.h-other.h;
+        }
+    }
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+    
+        List<List<Integer>> li = new ArrayList<List<Integer>>();
+        
+        if(root==null)
+            return li;
+        
+        ArrayList<Integer> al = new ArrayList<>();
+        
+        Queue<Pair> qu= new LinkedList<>();
+        HashMap<Integer, ArrayList<Pair>> hm= new HashMap<>();
+        
+        qu.add(new Pair(root,0,0));
+        
+        int minLeft=0;
+        int maxRight=0;
+        
+        while(qu.size()!=0)
+        {
+            
+            Pair rem= qu.remove();//remove
+            
+            if(minLeft>rem.v)
+            {
+                minLeft=rem.v;
+            }
+            if(maxRight<rem.v)
+            {
+                maxRight=rem.v;
+            }
+                
+            //work
+            if(hm.containsKey(rem.v)==true)
+            {
+            ArrayList<Pair>  temp=hm.get(rem.v);
+            temp.add(rem);
+            }
+            else
+            {
+                ArrayList<Pair> temp = new ArrayList<>();
+                temp.add(rem);
+                hm.put(rem.v,temp);
+            }
+            
+            //add children
+            if(rem.node.left!=null)
+            {
+             qu.add(new Pair(rem.node.left,rem.h+1,rem.v-1));   
+            }
+            
+            if(rem.node.right!=null)
+            {
+             qu.add(new Pair(rem.node.right,rem.h+1,rem.v+1));   
+            }
+            
+        }
+        
+        for(int i=minLeft;i<=maxRight;i++)
+        {
+        ArrayList<Pair>  unsortedList= hm.get(i);
+            Collections.sort(unsortedList);
+            
+        ArrayList<Integer> sorted= new ArrayList<>();
+            for(int j=0;j<unsortedList.size();j++)
+            {
+                sorted.add(unsortedList.get(j).node.val);
+            }
+            
+            li.add(sorted);
+        }
+        
+        return li;
+    }
+}
